@@ -1,64 +1,14 @@
-"no need for the toolbars
-set guioptions-=T
-set guioptions-=r
-set guioptions-=L
-
-" no backup file creation
-set nobackup
-set noswapfile
-
-" Vim to have a large undo buffer, a large history of commands,
-"ignore some file extensions when completing names by pressing Tab, and be
-"silent about invalid cursor moves and other errors.
-set history=1000         " remember more commands and search history
-set undolevels=1000      " use many muchos levels of undo
-set wildignore=*.swp,*.bak,*.pyc,*.class
-set title                " change the terminal's title
-"
-"
-"hidden allows to edit other files using :e without needing to save current
-"buffer
-set hidden
-"
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>"map ; to : to prevent more key strokes
-"
+"Keyboard tweaks
+nnoremap <tab> %
+vnoremap <tab> %
+nnoremap j gj
+nnoremap k gk
+let mapleader=','  " Map , to leader key
+"map ; to : to prevent more key strokes
 nnoremap ; :
-"allow mouse motion
-"
-set mouse=a
-" Change Working Directory to that of the current file
-cmap cwd lcd %:p:h
-cmap cd. lcd %:p:h
-"
-" Map , to leader key
-let mapleader=','
-
-" Mapping kj sequence to <esc>
-"
-inoremap kj <Esc>
-
-
-" set UTF-8 encoding
-set enc=utf-8
-set fenc=utf-8
-set termencoding=utf-8
-
-"insert a newline below current line
-
-map <CR> <esc>o<esc>k
-
-"insert a newline above when pressing shift-enter
-map <S-CR> <esc>O<esc>j
-
-"map capslock key to esc "TODO
-
-"set line numbering
-set number
-
+" Mapping jj sequence to <esc>
+" Not required after mapping CAPS to Esc inoremap jj <Esc>
 "Disabling the arrow keys for a while
-"
 noremap <Up> <nop>
 noremap <Down> <nop>
 noremap <Left> <nop>
@@ -74,67 +24,92 @@ cmap WQ wq
 cmap wQ wq
 cmap Q q
 cmap Tabe tabe
+"insert a newline below current line
+map <CR> <esc>o<esc>k
+"insert a newline above when pressing shift-enter
+map <S-CR> <esc>O<esc>j
+" zh/zl for subword motion in vim
+map <silent> zh :call search("[A-Z]\\\|\\\>","b")<CR>
+map <silent> zl :call search("[A-Z]\\\|\\\>","")<CR>
 " few small insertion tweaks
 nmap <space> i_<esc>r
 " make K behave opposite of J
 nmap K i<cr><esc>k$
-
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
-
-"clearing highlighted search
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+ "clearing highlighted search
 nmap <silent> <leader>/ :nohlsearch<CR>
 
+"setting in incompatibility mode with vi
+set nocompatible
+"removing toolbars and scrollbars
+set guioptions-=T
+set guioptions-=r
+set guioptions-=L
+" no backup file creation
+set nobackup
+set noswapfile
+" Vim to have a large undo buffer, a large history of commands,
+"ignore some file extensions when completing names by pressing Tab, and be
+"silent about invalid cursor moves and other errors.
+set history=1000         " remember more commands and search history
+set undolevels=1000      " use many muchos levels of undo
+set wildignore=*.swp,*.bak,*.pyc,*.class
+set title                " change the terminal's title
+"
+"hidden allows to edit other files using :e without needing to save current
+"buffer
+set hidden
+"
+"allow mouse motion
+set mouse=a
+" Change Working Directory to that of the current file
+cmap cwd lcd %:p:h
+cmap cd. lcd %:p:h
+" Set encodings
+set enc=utf-8
+set fenc=utf-8
+set termencoding=utf-8
+"set line numbering to be relative to current line
+set relativenumber
 "add highlight to FIXED to C code TODO -> make work for python and others
-syn keyword cTodo contained TODO FIXME XXX FIXED HACK
-
+syn keyword cTodo contained TODO FIXME XXX FIXED FIXER
 "" To save as sudo, use :w!!
 cmap w!! w !sudo tee >/dev/null "%"
-
 "indentation
 set autoindent
 set smartindent
-
 "" Remove backspace issue
 set backspace=2 " make backspace work like most other apps
-
-" highlight searched term
-set hlsearch
+"wrap settings
+set nowrap
 "
-" find as you type search - incremental search
-set incsearch			
-"
-"wrap lines
-set lbr
-" curson customization
-
 " Color scheme for vim
-
 "Solarized
 set t_Co=16
-let g:solarized_termcolors=16
-colorscheme solarized
+"let g:solarized_termcolors=16
+colorscheme mustang
 if has('gui_running')
-  set background=light
-else
-  set background=dark
+  set lines=45
 endif
 
 "vim-pathogen
+filetype off
 call pathogen#infect()
-
+"filetype specific settings
 filetype plugin on
 filetype plugin indent on
 syntax enable
 
-set ai sw=2 wm=5 sm
+"tabs and other spacing
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
 
-set modeline " suggested for Python at http://wiki.python.org/moin/Vim
-
-"setting in incompatibility mode with vi
-set nocompatible
-
-set nocp
 
 "map F v%zf 
 set tags=./tags;/
@@ -153,18 +128,15 @@ if has("cscope")
   endif
 endif
 
-map  <F12> :set hls!<CR>
-imap <F12> <ESC>:set hls!<CR>a
-vmap <F12> <ESC>:set hls!<CR>gv
-
 au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
 nnoremap <F5> :GundoToggle<CR>
 
-
 "
 " " IMPORTANT: grep will sometimes skip displaying the file name if you
+"
+"
 " " search in a singe file. This will confuse Latex-Suite. Set your grep
 " " program to always generate a file-name.
 set grepprg=grep\ -nH\ $*
@@ -180,3 +152,39 @@ let g:tex_flavor='latex'
 "" for automatically exiting from scratch preview pane
 autocmd CursorMovedI * if pumvisible() == -1|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+"NERDtree settings
+let NERDTreeIgnore=['\.o$', '\~$', '\.pyc$', '\.swp']
+
+"Show mode
+set showmode
+set showcmd
+
+"search options
+set ignorecase "Ignore case while searching
+set hlsearch "highlight searched term
+set incsearch " find as you type search - incremental search			
+"
+"Statusline
+set laststatus=2
+set statusline+=%l/%L   "cursor line/total lines
+set statusline+=\ %c,     "cursor column
+set statusline+=\ %P    "percent through file
+set statusline+=\ %t       "tail of the filename
+set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
+set statusline+=%{&ff}] "file format
+set statusline+=%h      "help file flag
+set statusline+=%m      "modified flag
+set statusline+=%r      "read only flag
+set statusline+=%y      "filetype
+set statusline+=%=      "left/right separator
+
+"Command-T settings
+let g:CommandTMaxFiles=2000
+
+"Rainbow parantheses (highilighting nested brackets)
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadChevrons
