@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/home/abhay/Desktop/Spring2012/CS 695/reviews'
+let g:netrw_dirhist_2='/etc/apache2'
+let g:netrw_dirhist_3='/home/abhay/.vim'
+let g:netrw_dirhist_4='/home/abhay/.vim/eclim'
+let g:netrw_dirhist_5='/home/abhay/Desktop/Spring2012/CS 631/Assignments/assignment-1/.git'
+let g:netrw_dirhist_6='/home/abhay/Desktop/Spring2012/CS 631/Assignments/assignment-1/test'
+let g:netrw_dirhist_7='/home/abhay/.vim'
