@@ -1,3 +1,5 @@
 vim/view/
 vim/eclim/
+vim/.netrwhist
+vim/.VimBallRecord
 *.o
