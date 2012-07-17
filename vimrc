@@ -89,16 +89,16 @@ set nowrap
 "
 " Color scheme for vim
 "Solarized
-set t_Co=16
 "let g:solarized_termcolors=16
+set background=dark
 colorscheme mustang
-if has('gui_running')
-  set lines=45
-endif
+set t_Co=16
+"if has('gui_running')
+"  set lines=45
+"endif
 
-"vim-pathogen
-filetype off
 call pathogen#infect()
+filetype off
 "filetype specific settings
 filetype plugin on
 filetype plugin indent on
@@ -180,11 +180,50 @@ set statusline+=%y      "filetype
 set statusline+=%=      "left/right separator
 
 "Command-T settings
-let g:CommandTMaxFiles=2000
+let g:CommandTMaxFiles=200000
 
 "Rainbow parantheses (highilighting nested brackets)
-au VimEnter * RainbowParenthesesToggle
+au VimEnter * RainbowParenthesesToggleAll
+au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadChevrons
+
+"Eclim related settings
+"
+
+"Tagbar
+let g:tagbar_ctags_bin='/usr/local/bin/ctags'  " Proper Ctags locations
+let g:tagbar_width=40                          " Default is 40, seems too wide
+nmap <silent> <leader>y :TagbarToggle<CR><C-w><C-w>
+
+"Supertab settings
+" Supertab settings
+" supertab + eclim == java win
+let g:SuperTabDefaultCompletionTypeDiscovery = [
+            \ "&completefunc:<c-x><c-u>",
+            \ "&omnifunc:<c-x><c-o>",
+            \ ]
+let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
+let g:SuperTabLongestHighlight = 1
+
+"Resizing horizontal splits
+if bufwinnr(1)
+    map + <C-W>+
+    map - <C-W>-
+endif
+
+"CtrlP configuration
+let g:ctrlp_map = '<leader>p'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 2
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip  " MacOSX/Linux
+set wildignore+=tmp\*,*.swp,*.zip,*.exe   " Windows
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|\.hg$\|\.svn$',
+  \ 'file': '\.exe$\|\.so$\|\.dll$',
+  \ }
+let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
+
+
+"auto-read file if modified elsewhere
+set autoread
