@@ -4,6 +4,7 @@ vnoremap <tab> %
 nnoremap j gj
 nnoremap k gk
 let mapleader=','  " Map , to leader key
+let g:mapleader = ","
 "map ; to : to prevent more key strokes
 nnoremap ; :
 " Mapping jj sequence to <esc>
@@ -97,7 +98,10 @@ set t_Co=16
 "  set lines=45
 "endif
 
+" Pathogen
 call pathogen#infect()
+call pathogen#helptags()
+
 filetype off
 "filetype specific settings
 filetype plugin on
@@ -155,6 +159,14 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 "NERDtree settings
 let NERDTreeIgnore=['\.o$', '\~$', '\.pyc$', '\.swp']
+" Toggle Nerd tree using F2.
+"map <F2> :NERDTreeToggle<CR>
+" NerdTreeMirrorToggle of nerd-tree-tabs is a smarter option
+map <F2> :NERDTreeMirrorToggle<CR>
+" Shift-F2 toggles nerdtree in all tabs
+map <S-F2> :NerdTreeTabsToggle<CR>
+" Don't synchronise view(scroll and cursor position)of different nerdtrees
+let g:nerdtree_tabs_synchronize_view=0
 
 "Show mode
 set showmode
@@ -166,7 +178,7 @@ set hlsearch "highlight searched term
 set incsearch " find as you type search - incremental search			
 "
 "Statusline
-set laststatus=2
+set laststatus=2    "always show statusline
 set statusline+=%l/%L   "cursor line/total lines
 set statusline+=\ %c,     "cursor column
 set statusline+=\ %P    "percent through file
@@ -227,3 +239,48 @@ let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
 
 "auto-read file if modified elsewhere
 set autoread
+
+
+" taken from NG
+
+" Fast saving. <leader>w would save the file
+nmap <leader>w :w!<cr>
+
+" set cursorline
+set cursorline
+
+" Set 7 lines to the cursor - when moving vertically using j/k
+set so=7
+
+" Return to last edit position when opening files (You want this!)
+augroup last_edit_pos
+    au!
+    autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \ exe "normal! g`\"" |
+     \ endif
+augroup END 
+
+" CTRL-C, CTRL-X and CTRL-V for copy-cut-pasting to system clipboard
+imap <C-V> <Esc>"+]p
+nmap <C-V> <Esc>"+]p
+vmap <C-C> "+y
+vmap <C-X> "+d
+nnoremap <leader>v <C-V>
+
+" CTRL-A in normal mode for select all
+nmap <C-A> <Esc>G$vgg
+
+" Allow backspacing over everything in insertmode
+set backspace=indent,eol,start
+set whichwrap+=<,>,h,l
+
+" Time out on mapping after two seconds, time out on key codes after
+" a tenth of a second
+set timeout
+set timeoutlen=2000
+set ttimeoutlen=100
+
+" code folding stuff
+set foldmethod=marker
+set foldmethod=indent
