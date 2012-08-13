@@ -23,6 +23,7 @@ map <C-l> <C-w>l
 cmap W w
 cmap WQ wq
 cmap wQ wq
+cmap wq x
 cmap Q q
 cmap Tabe tabe
 "insert a newline below current line
@@ -75,9 +76,10 @@ set enc=utf-8
 set fenc=utf-8
 set termencoding=utf-8
 "set line numbering to be relative to current line
-set relativenumber
+" set relativenumber : Replaced by plugin: vim-numbertoggle
+
 "add highlight to FIXED to C code TODO -> make work for python and others
-syn keyword cTodo contained TODO FIXME XXX FIXED FIXER
+syn keyword cTodo contained TODO FIXME XXX FIXED
 "" To save as sudo, use :w!!
 cmap w!! w !sudo tee >/dev/null "%"
 "indentation
@@ -262,8 +264,7 @@ augroup last_edit_pos
 augroup END 
 
 " CTRL-C, CTRL-X and CTRL-V for copy-cut-pasting to system clipboard
-imap <C-V> <Esc>"+]p
-nmap <C-V> <Esc>"+]p
+imap <C-v> "+gp
 vmap <C-C> "+y
 vmap <C-X> "+d
 nnoremap <leader>v <C-V>
