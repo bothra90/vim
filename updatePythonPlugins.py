@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from os import listdir, chdir, getcwd
 from subprocess import call
 
