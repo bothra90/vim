@@ -258,7 +258,7 @@ execute pathogen#infect()
 "NERDtree settings
 let NERDTreeIgnore=['\.o$', '\~$', '\.pyc$', '\.swp']
 "Toggle Nerd tree using F2.
-"map <F2> :NERDTreeToggle<CR>
+map <F2> :NERDTreeToggle<CR>
 "NerdTreeMirrorToggle of nerd-tree-tabs is a smarter option
 map <F2> :NERDTreeMirrorToggle<CR>
 "Shift-F2 toggles nerdtree in all tabs
@@ -269,8 +269,8 @@ let g:nerdtree_tabs_synchronize_view=0
 "CtrlP configuration
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 2
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip  "MacOSX/Linux
+let g:ctrlp_working_path_mode = 'ra'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.m2,*.git  "MacOSX/Linux
 set wildignore+=tmp\*,*.swp,*.zip,*.exe   "Windows
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\.git$\|\.hg$\|\.svn$',
@@ -287,15 +287,14 @@ au Syntax * RainbowParenthesesLoadBraces
 "GUndo
 nnoremap <F5> :GundoToggle<CR>
 
-"Supertab settings
-"Supertab settings
+"Supertab settings (NOT BEING USED - USE YouCompleteMe istead)
 "supertab + eclim == java win
-let g:SuperTabDefaultCompletionTypeDiscovery = [
-            \ "&completefunc:<c-x><c-u>",
-            \ "&omnifunc:<c-x><c-o>",
-            \ ]
-let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
-let g:SuperTabLongestHighlight = 1
+"let g:SuperTabDefaultCompletionTypeDiscovery = [
+"            \ "&completefunc:<c-x><c-u>",
+"            \ "&omnifunc:<c-x><c-o>",
+"            \ ]
+"let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
+"let g:SuperTabLongestHighlight = 1
 
 "Tagbar
 let g:tagbar_ctags_bin='/usr/local/bin/ctags'  "Proper Ctags locations
@@ -307,3 +306,6 @@ let g:CommandTMaxFiles=200000
 
 "Solarized
 "let g:solarized_termcolors=16
+
+"YouCompleteMe
+let g:ycm_confirm_extra_conf = 0 "Do not ask confirmation when loading conf file from parent
