@@ -67,3 +67,6 @@
 [submodule "vim/bundle/vim-airline"]
 	path = vim/bundle/vim-airline
 	url = git://github.com/bling/vim-airline
+[submodule "vim/bundle/DoxygenToolkit.vim"]
+	path = vim/bundle/DoxygenToolkit.vim
+	url = https://github.com/vim-scripts/DoxygenToolkit.vim
