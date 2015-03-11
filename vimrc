@@ -287,15 +287,6 @@ au Syntax * RainbowParenthesesLoadBraces
 "GUndo
 nnoremap <F5> :GundoToggle<CR>
 
-"Supertab settings (NOT BEING USED - USE YouCompleteMe istead)
-"supertab + eclim == java win
-"let g:SuperTabDefaultCompletionTypeDiscovery = [
-"            \ "&completefunc:<c-x><c-u>",
-"            \ "&omnifunc:<c-x><c-o>",
-"            \ ]
-"let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
-"let g:SuperTabLongestHighlight = 1
-
 "Tagbar
 let g:tagbar_ctags_bin='/usr/local/bin/ctags'  "Proper Ctags locations
 let g:tagbar_width=40                          "Default is 40, seems too wide
@@ -303,9 +294,6 @@ nmap <silent> <leader>y :TagbarToggle<CR><C-w><C-w>
 
 "Command-T settings
 let g:CommandTMaxFiles=200000
-
-"Solarized
-"let g:solarized_termcolors=16
 
 "YouCompleteMe
 let g:ycm_confirm_extra_conf = 0 "Do not ask confirmation when loading conf file from parent
