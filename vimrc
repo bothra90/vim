@@ -297,3 +297,4 @@ let g:CommandTMaxFiles=200000
 
 "YouCompleteMe
 let g:ycm_confirm_extra_conf = 0 "Do not ask confirmation when loading conf file from parent
+let g:ycm_show_diagnostics_ui = 0 "Disable diagnostic UI by default
