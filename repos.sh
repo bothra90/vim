@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pushd ~
-git clone https://github.com/bothra90/vim.git
+git clone git@github.com:bothra90/vim.git
 ln -s ~/vim/vim ~/.vim
 ln -s ~/vim/vimrc ~/.vimrc
 

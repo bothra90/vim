@@ -1,9 +1,9 @@
 [submodule "vim/bundle/YouCompleteMe"]
-    path = vim/bundle/YouCompleteMe
-    url = git://github.com/Valloric/YouCompleteMe.git
+	path = vim/bundle/YouCompleteMe
+	url = git://github.com/Valloric/YouCompleteMe.git
 [submodule "vim/bundle/vim-repeat"]
-    path = vim/bundle/vim-repeat
-    url = git://github.com/tpope/vim-repeat.git
+	path = vim/bundle/vim-repeat
+	url = git://github.com/tpope/vim-repeat.git
 [submodule "vim/bundle/vim-surround"]
 	path = vim/bundle/vim-surround
 	url = git://github.com/tpope/vim-surround.git
@@ -56,11 +56,14 @@
 	path = vim/bundle/vim-snippets
 	url = git://github.com/honza/vim-snippets.git
 [submodule "vim/bundle/vim-addon-mw-utils"]
-    path = vim/bundle/vim-addon-mw-utils
-    url = git://github.com/MarcWeber/vim-addon-mw-utils.git
+	path = vim/bundle/vim-addon-mw-utils
+	url = git://github.com/MarcWeber/vim-addon-mw-utils.git
 [submodule "vim/bundle/cscope.vim"]
-    path = vim/bundle/cscope.vim
-    url = git://github.com/vim-scripts/cscope.vim
+	path = vim/bundle/cscope.vim
+	url = git://github.com/vim-scripts/cscope.vim
 [submodule "vim/bundle/ack.vim"]
     path = vim/bundle/ack.vim
     url = git://github.com/mileszs/ack.vim
+[submodule "vim/bundle/vim-airline"]
+	path = vim/bundle/vim-airline
+	url = git://github.com/bling/vim-airline
