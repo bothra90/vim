@@ -61,3 +61,6 @@
 [submodule "vim/bundle/cscope.vim"]
     path = vim/bundle/cscope.vim
     url = git://github.com/vim-scripts/cscope.vim
+[submodule "vim/bundle/ack.vim"]
+    path = vim/bundle/ack.vim
+    url = git://github.com/mileszs/ack.vim
