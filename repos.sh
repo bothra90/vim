@@ -64,3 +64,6 @@ git submodule add git://github.com/honza/vim-snippets.git
 
 #cscope support
 git submodule add git://github.com/vim-scripts/cscope.vim
+
+#better status line
+git submodule add git://github.com/bling/vim-airline
