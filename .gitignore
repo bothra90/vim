@@ -3,3 +3,4 @@ vim/eclim/
 vim/.netrwhist
 vim/.VimBallRecord
 *.o
+.DS_Store
