@@ -138,10 +138,10 @@ syntax enable
 
 "tabs and other spacing
 set expandtab
-"these should be filetype specific
-"set tabstop=2
-"set shiftwidth=2
-"set softtabstop=2
+"these should be overridden in filetype specific syntax files
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 
 "map F v%zf
 set tags=./tags;/
