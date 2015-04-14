@@ -7,14 +7,15 @@ nnoremap j gj
 nnoremap k gk
 
 "Map , to leader key
-let mapleader=','  
+let mapleader=','
 let g:mapleader = ","
 
 "map ; to : to prevent more key strokes
 nnoremap ; :
- 
+
 "Mapping jj sequence to <esc>
 inoremap jj <Esc>
+inoremap jk <Esc>O
 
 "Disabling the arrow keys for a while
 noremap <Up> <nop>
@@ -58,7 +59,11 @@ nnoremap Y y$
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
- "clearing highlighted search
+"searching
+set ignorecase "Ignore case while searching
+set smartcase
+set hlsearch "highlight searched term
+set incsearch "find as you type search - incremental search
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 "setting in incompatibility mode with vi
@@ -85,7 +90,7 @@ set visualbell           "don't beep
 set noerrorbells         "don't beep
 
 "change the terminal's title
-set title                
+set title
 
 "hidden allows to edit other files using :e without needing to save current buffer
 set hidden
@@ -106,7 +111,7 @@ set termencoding=utf-8
 "set line numbering to be relative to current line
 "set relativenumber : Replaced by plugin: vim-numbertoggle
 
-"add highlight to FIXED to C code TODO -> make work for python and others
+"add highlight to FIXED to C code // TODO -> make work for python and others
 syn keyword cTodo contained TODO FIXME XXX FIXED
 
 "To save as sudo, use :w!!
@@ -117,10 +122,10 @@ set autoindent
 set smartindent
 
 "Remove backspace issue - make backspace work like most other apps
-set backspace=2 
+set backspace=2
 
 "Do not wrap long lines
-set nowrap
+"set nowrap
 
 "Color scheme for vim
 colorscheme mustang
@@ -128,17 +133,17 @@ set t_Co=16
 
 "filetype specific settings
 filetype off
-filetype plugin on
 filetype plugin indent on
 syntax enable
 
 "tabs and other spacing
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
 set expandtab
+"these should be filetype specific
+"set tabstop=2
+"set shiftwidth=2
+"set softtabstop=2
 
-"map F v%zf 
+"map F v%zf
 set tags=./tags;/
 set autowrite
 if has("cscope")
@@ -181,23 +186,20 @@ set showmode
 set showcmd
 
 "search options
-set ignorecase "Ignore case while searching
-set hlsearch "highlight searched term
-set incsearch "find as you type search - incremental search			
 
-"Statusline
+"Statusline // use vim airline instead
 set laststatus=2    "always show statusline
-set statusline+=%l/%L   "cursor line/total lines
-set statusline+=\ %c,     "cursor column
-set statusline+=\ %P    "percent through file
-set statusline+=\ %t       "tail of the filename
-set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
-set statusline+=%{&ff}] "file format
-set statusline+=%h      "help file flag
-set statusline+=%m      "modified flag
-set statusline+=%r      "read only flag
-set statusline+=%y      "filetype
-set statusline+=%=      "left/right separator
+"set statusline+=%l/%L   "cursor line/total lines
+"set statusline+=\ %c,     "cursor column
+"set statusline+=\ %P    "percent through file
+"set statusline+=\ %t       "tail of the filename
+"set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
+"set statusline+=%{&ff}] "file format
+"set statusline+=%h      "help file flag
+"set statusline+=%m      "modified flag
+"set statusline+=%r      "read only flag
+"set statusline+=%y      "filetype
+"set statusline+=%=      "left/right separator
 
 "Resizing horizontal splits
 if bufwinnr(1)
@@ -211,7 +213,7 @@ set autoread
 "Fast saving. <leader>w would save the file
 nmap <leader>w :w!<cr>
 
-"set cursorline
+"Highlight current cursor line
 set cursorline
 
 "Set 7 lines to the cursor - when moving vertically using j/k
@@ -224,7 +226,7 @@ augroup last_edit_pos
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \ exe "normal! g`\""|
      \ endif
-augroup END 
+augroup END
 
 "CTRL-C, CTRL-X and CTRL-V for copy-cut-pasting to system clipboard
 imap <C-v> "+gp
@@ -249,6 +251,28 @@ set ttimeoutlen=100
 set foldmethod=marker
 set foldmethod=indent
 
+"load syntax depending on filetype
+" Detect proto files
+augroup filetype
+au! BufRead,BufNewFile *.proto setfiletype proto
+augroup end
+
+"Detect go files
+augroup filetype
+au! BufRead,BufNewFile *.go setfiletype go
+augroup end
+
+"Scons files are python files
+augroup filetype
+au! BufRead,BufNewFile SConstruct setfiletype python
+augroup end
+augroup filetype
+au!  BufRead,BufNewFile SConscript setfiletype python
+augroup end
+
+"Auto-delete any trailing white space on save
+autocmd BufWritePre * :%s/\s\+$//e
+
 "----------------- Plugin specific configurations -------------------
 
 "Pathogen - used to manage vim plugins
@@ -271,7 +295,6 @@ let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.m2,*.git  "MacOSX/Linux
-set wildignore+=tmp\*,*.swp,*.zip,*.exe   "Windows
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\.git$\|\.hg$\|\.svn$',
   \ 'file': '\.exe$\|\.so$\|\.dll$',
@@ -297,4 +320,4 @@ let g:CommandTMaxFiles=200000
 
 "YouCompleteMe
 let g:ycm_confirm_extra_conf = 0 "Do not ask confirmation when loading conf file from parent
-let g:ycm_show_diagnostics_ui = 0 "Disable diagnostic UI by default
+let g:ycm_show_diagnostics_ui = 1 "Show diagnostic UI by default
