@@ -1,5 +1,5 @@
-set lines=42
-set columns=84
+"set lines=42
+"set columns=84
 setlocal tabstop=4
 setlocal softtabstop=4
 setlocal shiftwidth=4

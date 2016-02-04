@@ -1,3 +1,6 @@
+"setting in incompatibility mode with vi
+set nocompatible
+
 "Keyboard tweaks
 nnoremap <tab> %
 vnoremap <tab> %
@@ -13,15 +16,15 @@ let g:mapleader = ","
 "map ; to : to prevent more key strokes
 nnoremap ; :
 
-"Mapping jj sequence to <esc>
-inoremap jj <Esc>
-inoremap jk <Esc>O
+"Mapping jj sequence to <ESC>
+inoremap jj <ESC>
+inoremap jk <ESC>O
 
-"Disabling the arrow keys for a while
-noremap <Up> <nop>
-noremap <Down> <nop>
-noremap <Left> <nop>
-noremap <Right> <nop>
+"Disable the arrow keys to encourage habit of using hjkl
+"noremap <Up> <nop>
+"noremap <Down> <nop>
+"noremap <Left> <nop>
+"noremap <Right> <nop>
 
 "Easy window navigation
 map <C-h> <C-w>h
@@ -30,27 +33,29 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 "Correcting Typos
-cmap W w
 cmap WQ wq
 cmap wQ wq
-cmap wq x
-cmap Q q
 cmap Tabe tabe
+"For better habit
+cmap wq x
 
 "insert a newline below current line
-nnoremap <CR> <esc>o<esc>k
+nnoremap <CR> <ESC>o<ESC>k
 "insert a newline above when pressing shift-enter
-nnoremap <S-CR> <esc>O<esc>j
+nnoremap <S-CR> <ESC>O<ESC>j
+"above on itself does not work for iTerm - so this is a hack
+"(http://stackoverflow.com/questions/5388562/cant-map-s-cr-in-vim)
+nmap ✠ <S-CR>
 
 "zh/zl for subword motion in vim
 map <silent> zh :call search("[A-Z]\\\|\\\>","b")<CR>
 map <silent> zl :call search("[A-Z]\\\|\\\>","")<CR>
 
-"insert blank space at cursor location when pressing space in normal mode
-nmap <space> i_<esc>r
+"insert blank space and enter replace mode at cursor location when pressing space in normal mode
+nmap <space> i_<ESC>r
 
 "make K behave opposite of J
-nmap K i<cr><esc>k$
+nmap K i<cr><ESC>k$
 
 "Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
@@ -65,9 +70,6 @@ set smartcase
 set hlsearch "highlight searched term
 set incsearch "find as you type search - incremental search
 nmap <silent> <leader>/ :nohlsearch<CR>
-
-"setting in incompatibility mode with vi
-set nocompatible
 
 "removing toolbars and scrollbars
 set guioptions-=T
@@ -234,8 +236,10 @@ vmap <C-C> "+y
 vmap <C-X> "+d
 nnoremap <leader>v <C-V>
 
+inoremap " ""<esc>i
+
 "CTRL-A in normal mode for select all
-nmap <C-A> <Esc>G$vgg
+nmap <C-A> <ESC>G$vgg
 
 "Allow backspacing over everything in insertmode
 set backspace=indent,eol,start
@@ -270,6 +274,12 @@ augroup filetype
 au!  BufRead,BufNewFile SConscript setfiletype python
 augroup end
 
+"Config for GitHub Flavored Markdown
+augroup markdown
+    au!
+    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+augroup END
+
 "Auto-delete any trailing white space on save
 autocmd BufWritePre * :%s/\s\+$//e
 
@@ -291,15 +301,15 @@ map <S-F2> :NerdTreeTabsToggle<CR>
 let g:nerdtree_tabs_synchronize_view=0
 
 "CtrlP configuration
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.m2,*.git  "MacOSX/Linux
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.m2,*.git  "MacOSX/Linux
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-  \ 'file': '\.exe$\|\.so$\|\.dll$',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
   \ }
-let g:ctrlp_user_command = 'find %s -type f'        "MacOSX/Linux
+"let g:ctrlp_user_command = 'find %s -type f'        "MacOSX/Linux
 
 "Rainbow parantheses (highilighting nested brackets)
 au VimEnter * RainbowParenthesesToggleAll
@@ -321,3 +331,4 @@ let g:CommandTMaxFiles=200000
 "YouCompleteMe
 let g:ycm_confirm_extra_conf = 0 "Do not ask confirmation when loading conf file from parent
 let g:ycm_show_diagnostics_ui = 1 "Show diagnostic UI by default
+source /home/abhay/.vim/thoughtspot/copyright.vim

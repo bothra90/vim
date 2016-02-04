@@ -34,7 +34,7 @@ git submodule add git://github.com/scrooloose/nerdcommenter vim/bundle/nerdcomme
 git submodule add git://github.com/scrooloose/nerdtree vim/bundle/nerdtree
 
 #open files by fuzzy search
-git submodule add git://github.com/kien/ctrlp.vim vim/bundle/ctrlp.vim
+git submodule add git://github.com/ctrlpvim/ctrlp.vim vim/bundle/ctrlp.vim
 
 #open files by file system explorer; Also provides better buffer management using <leader>lj
 git submodule add git://github.com/sjbach/lusty vim/bundle/lusty
@@ -74,3 +74,6 @@ git submodule add git://github.com/vim-scripts/cscope.vim vim/bundle/cscope.vim
 
 #better status line
 git submodule add git://github.com/bling/vim-airline vim/bundle/vim-airline
+
+#vim sessions
+git submodule add git:://github.com/tpope/vim-obsession vim/bundle/vim-obsession

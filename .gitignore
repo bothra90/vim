@@ -2,5 +2,6 @@ vim/view/
 vim/eclim/
 vim/.netrwhist
 vim/.VimBallRecord
+vim/bundle
 *.o
 .DS_Store
