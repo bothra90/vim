@@ -58,5 +58,5 @@ endfunction
 set indentexpr=IndentNamespace()
 
 " clang settings
-map  <leader>k :pyf ~/clang/clang-format.py<CR>
-inoremap <C-k> <ESC>:pyf ~/clang/clang-format.py<CR>i
+map  <leader>k :pyf ~/fbsource/fbcode/shellconfigs/vim/vim/clang-format.py<CR>
+inoremap <C-k> <ESC>:pyf ~/fbsource/fbcode/shellconfigs/vim/vim/clang-format.py<CR>i

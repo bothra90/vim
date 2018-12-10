@@ -1,3 +1,43 @@
+" setup vim-plug package manager.
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+call plug#begin('~/.vim/plugged')
+Plug 'ayu-theme/ayu-vim'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'kien/ctrlp.vim'
+Plug 'vim-scripts/a.vim'
+Plug 'w0rp/ale'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'pdavydov108/vim-lsp-cquery'
+Plug 'sickill/vim-pasta'
+Plug 'vim-airline/vim-airline'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-obsession'
+Plug 'sjbach/lusty'
+Plug 'sjl/gundo.vim'
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
+Plug 'easymotion/vim-easymotion'
+Plug 'mtth/scratch.vim'
+Plug 'majutsushi/tagbar'
+Plug 'benmills/vimux'
+Plug 'ludovicchabant/vim-lawrencium'
+Plug 'rust-lang/rust.vim'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'garbas/vim-snipmate'
+Plug 'honza/vim-snippets'
+Plug 'tomtom/tlib_vim'
+call plug#end()
 "setting in incompatibility mode with vi
 set nocompatible
 
@@ -19,12 +59,6 @@ nnoremap ; :
 "Mapping jj sequence to <ESC>
 inoremap jj <ESC>
 inoremap jk <ESC>O
-
-"Disable the arrow keys to encourage habit of using hjkl
-"noremap <Up> <nop>
-"noremap <Down> <nop>
-"noremap <Left> <nop>
-"noremap <Right> <nop>
 
 "Easy window navigation
 map <C-h> <C-w>h
@@ -110,9 +144,6 @@ set enc=utf-8
 set fenc=utf-8
 set termencoding=utf-8
 
-"set line numbering to be relative to current line
-"set relativenumber : Replaced by plugin: vim-numbertoggle
-
 "add highlight to FIXED to C code // TODO -> make work for python and others
 syn keyword cTodo contained TODO FIXME XXX FIXED
 
@@ -130,7 +161,11 @@ set backspace=2
 "set nowrap
 
 "Color scheme for vim
-colorscheme mustang
+let ayucolor="dark"
+colorscheme ayu
+if (has("termguicolors"))
+  set termguicolors
+endif
 set t_Co=16
 
 "filetype specific settings
@@ -165,29 +200,14 @@ endif
 au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
-"
 ""IMPORTANT: grep will sometimes skip displaying the file name if you
 ""search in a singe file. This will confuse Latex-Suite. Set your grep
 ""program to always generate a file-name.
 set grepprg=grep\ -nH\ $*
-"
-""OPTIONAL: This enables automatic indentation as you type.
-"
-""OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults
-"to
-""'plaintex' instead of 'tex', which results in vim-latex not being loaded.
-""The following changes the default filetype back to 'tex':
-let g:tex_flavor='latex'
-
-""for automatically exiting from scratch preview pane
-autocmd CursorMovedI * if pumvisible() == -1|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 "Show mode
 set showmode
 set showcmd
-
-"search options
 
 "Statusline // use vim airline instead
 set laststatus=2    "always show statusline
@@ -230,12 +250,7 @@ augroup last_edit_pos
      \ endif
 augroup END
 
-"CTRL-C, CTRL-X and CTRL-V for copy-cut-pasting to system clipboard
-imap <C-v> "+gp
-vmap <C-C> "+y
-vmap <C-X> "+d
-nnoremap <leader>v <C-V>
-
+" Insert matching \" by default.
 inoremap " ""<esc>i
 
 "CTRL-A in normal mode for select all
@@ -266,12 +281,9 @@ augroup filetype
 au! BufRead,BufNewFile *.go setfiletype go
 augroup end
 
-"Scons files are python files
+"Buck files are python files
 augroup filetype
-au! BufRead,BufNewFile SConstruct setfiletype python
-augroup end
-augroup filetype
-au!  BufRead,BufNewFile SConscript setfiletype python
+au! BufRead,BufNewFile TARGETS setfiletype python
 augroup end
 
 "Config for GitHub Flavored Markdown
@@ -284,10 +296,6 @@ augroup END
 autocmd BufWritePre * :%s/\s\+$//e
 
 "----------------- Plugin specific configurations -------------------
-
-"Pathogen - used to manage vim plugins
-execute pathogen#infect()
-"call pathogen#helptags()
 
 "NERDtree settings
 let NERDTreeIgnore=['\.o$', '\~$', '\.pyc$', '\.swp']
@@ -312,23 +320,111 @@ let g:ctrlp_custom_ignore = {
 "let g:ctrlp_user_command = 'find %s -type f'        "MacOSX/Linux
 
 "Rainbow parantheses (highilighting nested brackets)
-au VimEnter * RainbowParenthesesToggleAll
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+""au VimEnter * RainbowParenthesesToggleAll
+""au Syntax * RainbowParenthesesLoadRound
+""au Syntax * RainbowParenthesesLoadSquare
+""au Syntax * RainbowParenthesesLoadBraces
 
 "GUndo
 nnoremap <F5> :GundoToggle<CR>
 
 "Tagbar
-let g:tagbar_ctags_bin='/usr/local/bin/ctags'  "Proper Ctags locations
+let g:tagbar_ctags_bin='/bin/ctags'  "Proper Ctags locations
 let g:tagbar_width=40                          "Default is 40, seems too wide
 nmap <silent> <leader>y :TagbarToggle<CR><C-w><C-w>
 
 "Command-T settings
 let g:CommandTMaxFiles=200000
 
-"YouCompleteMe
-let g:ycm_confirm_extra_conf = 0 "Do not ask confirmation when loading conf file from parent
-let g:ycm_show_diagnostics_ui = 1 "Show diagnostic UI by default
-source /home/abhay/.vim/thoughtspot/copyright.vim
+filetype plugin indent on    " required
+" Integrate with tbgs
+source /home/engshare/admin/scripts/vim/biggrep.vim
+
+" Integrate with myc
+set rtp+=/usr/local/share/myc/vim
+" Replace with a keybind you like
+nmap <leader>t :MYC<CR>
+
+" Highlight past column 80
+set colorcolumn=81,101 " absolute columns to highlight "
+set colorcolumn=+1,+21 " relative (to textwidth) columns to highlight "
+
+
+"set line numbering to be relative to current line
+set number relativenumber
+
+" FBCode using cquery
+" Options from
+" https://phabricator.internmc.facebook.com/diffusion/FBS/browse/master/xplat/nuclide/pkg/nuclide-cquery-lsp-rpc/lib/CqueryInitialization.js
+if executable('cquery')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'cquery',
+      \ 'cmd': {server_info->['bash', '-c',
+      \   '/data/users/$USER/fbsource/fbcode/experimental/gwicke/vim/fbcode_cquery_wrapper' ]},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.buckconfig'))},
+      \ 'initialization_options': {
+      \   'cacheDirectory': '/tmp/cquery_cache',
+      \   'index': {
+      \     'blacklist': ['.*/buck-out/.*', '.*/third-party-buck/.*']
+      \   },
+      \   'completion': {
+      \     'includeBlacklist': ['.*/buck-out/.*', '.*/third-party-buck/.*'],
+      \     'enableSnippets': v:true,
+      \   },
+      \   'diagnostics': {
+      \     'blacklist': ['.*/buck-out/.*', '.*/third-party-buck/.*'],
+      \     'onParse': v:true,
+      \     'onType': v:true,
+      \   },
+      \   'resourceDirectory': '',
+      \   'discoverSystemIncludes': v:false,
+      \   'showDocumentLinksOnIncludes': v:false,
+      \   'disableInitialIndex': v:true,
+      \   'progressReportFrequencyMs': 500,
+      \   'clientVersion': 3,
+      \   'codeLens': {
+      \        'localVariables': v:false,
+      \   },
+      \ },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc', 'h'],
+      \ })
+endif
+
+" Autocomplete - https://github.com/prabirshrestha/asyncomplete.vim
+let g:lsp_async_completion = 1
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+let g:lsp_signs_enabled = 1         " Show errors in sidebar
+let g:lsp_diagnostics_echo_cursor = 1 " Enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'}
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd CursorMovedI * if pumvisible() == -1|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+" Python
+au User lsp_setup call lsp#register_server({
+    \ 'name': 'pyls',
+    \ 'cmd': {server_info->['bash', '-c',
+    \   '/data/users/$USER/fbsource/fbcode/experimental/gwicke/vim/fbcode_pyls_wrapper']},
+    \ 'whitelist': ['python'],
+    \ 'workspace_config': {
+    \   'pyls': { 'plugins': { 'pydocstyle': {' enabled': v:true}}}
+    \ },
+ \ })
+
+" Rust Language Server.
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+        \ 'whitelist': ['rust'],
+        \ })
+endif
+
+" Deoplete for autocompletion
+let g:deoplete#enable_at_startup = 1

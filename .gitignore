@@ -3,5 +3,6 @@ vim/eclim/
 vim/.netrwhist
 vim/.VimBallRecord
 vim/bundle
+vim/plugged
 *.o
 .DS_Store
