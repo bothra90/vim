@@ -38,6 +38,7 @@ Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
 Plug 'tomtom/tlib_vim'
 call plug#end()
+
 "setting in incompatibility mode with vi
 set nocompatible
 
@@ -70,6 +71,7 @@ map <C-l> <C-w>l
 cmap WQ wq
 cmap wQ wq
 cmap Tabe tabe
+
 "For better habit
 cmap wq x
 
@@ -131,7 +133,6 @@ set title
 "hidden allows to edit other files using :e without needing to save current buffer
 set hidden
 
-
 "allow mouse motion
 set mouse=a
 
@@ -160,13 +161,15 @@ set backspace=2
 "Do not wrap long lines
 "set nowrap
 
-"Color scheme for vim
-let ayucolor="dark"
-colorscheme ayu
+" Set colors.
 if (has("termguicolors"))
   set termguicolors
 endif
 set t_Co=16
+
+"Color scheme for vim
+let ayucolor="dark"
+colorscheme ayu
 
 "filetype specific settings
 filetype off
@@ -180,23 +183,6 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 
-"map F v%zf
-set tags=./tags;/
-set autowrite
-if has("cscope")
-  set csprg=/usr/bin/cscope
-  set csto=0
-  set cst
-  set nocsverb
-  "add any database in current directory
-  if filereadable("cscope.out")
-    cs add cscope.out
-    "else add database pointed to by environment
-  elseif $CSCOPE_DB != ""
-    cs add $CSCOPE_DB
-  endif
-endif
-
 au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
@@ -209,19 +195,8 @@ set grepprg=grep\ -nH\ $*
 set showmode
 set showcmd
 
-"Statusline // use vim airline instead
-set laststatus=2    "always show statusline
-"set statusline+=%l/%L   "cursor line/total lines
-"set statusline+=\ %c,     "cursor column
-"set statusline+=\ %P    "percent through file
-"set statusline+=\ %t       "tail of the filename
-"set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
-"set statusline+=%{&ff}] "file format
-"set statusline+=%h      "help file flag
-"set statusline+=%m      "modified flag
-"set statusline+=%r      "read only flag
-"set statusline+=%y      "filetype
-"set statusline+=%=      "left/right separator
+" Always show statusline. Works best with vim-airline.
+set laststatus=2
 
 "Resizing horizontal splits
 if bufwinnr(1)
@@ -252,6 +227,7 @@ augroup END
 
 " Insert matching \" by default.
 inoremap " ""<esc>i
+inoremap ' ''<esc>i
 
 "CTRL-A in normal mode for select all
 nmap <C-A> <ESC>G$vgg
@@ -295,7 +271,39 @@ augroup END
 "Auto-delete any trailing white space on save
 autocmd BufWritePre * :%s/\s\+$//e
 
+filetype plugin indent on    " required
+
+" Highlight past column 80, 100
+set colorcolumn=81,101 " absolute columns to highlight "
+set colorcolumn=+1,+21 " relative (to textwidth) columns to highlight "
+
+"set line numbering to be relative to current line. This goes well with
+"vim-numbertoggle plugin
+set number relativenumber
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
+
 "----------------- Plugin specific configurations -------------------
+
+" CScope
+"map F v%zf
+set tags=./tags;/
+set autowrite
+if has("cscope")
+  set csprg=/usr/bin/cscope
+  set csto=0
+  set cst
+  set nocsverb
+  "add any database in current directory
+  if filereadable("cscope.out")
+    cs add cscope.out
+    "else add database pointed to by environment
+  elseif $CSCOPE_DB != ""
+    cs add $CSCOPE_DB
+  endif
+endif
 
 "NERDtree settings
 let NERDTreeIgnore=['\.o$', '\~$', '\.pyc$', '\.swp']
@@ -320,10 +328,10 @@ let g:ctrlp_custom_ignore = {
 "let g:ctrlp_user_command = 'find %s -type f'        "MacOSX/Linux
 
 "Rainbow parantheses (highilighting nested brackets)
-""au VimEnter * RainbowParenthesesToggleAll
-""au Syntax * RainbowParenthesesLoadRound
-""au Syntax * RainbowParenthesesLoadSquare
-""au Syntax * RainbowParenthesesLoadBraces
+au VimEnter * RainbowParenthesesToggleAll
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 "GUndo
 nnoremap <F5> :GundoToggle<CR>
@@ -336,24 +344,51 @@ nmap <silent> <leader>y :TagbarToggle<CR><C-w><C-w>
 "Command-T settings
 let g:CommandTMaxFiles=200000
 
-filetype plugin indent on    " required
-" Integrate with tbgs
-source /home/engshare/admin/scripts/vim/biggrep.vim
+" Autocomplete - https://github.com/prabirshrestha/asyncomplete.vim
+let g:lsp_async_completion = 1
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+let g:lsp_signs_enabled = 1         " Show errors in sidebar
+let g:lsp_diagnostics_echo_cursor = 1 " Enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'}
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd CursorMovedI * if pumvisible() == -1|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
+" Rust Language Server.
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+        \ 'whitelist': ['rust'],
+        \ })
+endif
+" Deoplete for autocompletion
+let g:deoplete#enable_at_startup = 1
+" Enable experimental completer for rust
+let g:racer_experimental_completer = 1
+
+" FB Specific Configuration.
+"Integrate with tbgs
+source /home/engshare/admin/scripts/vim/biggrep.vim
 " Integrate with myc
 set rtp+=/usr/local/share/myc/vim
-" Replace with a keybind you like
 nmap <leader>t :MYC<CR>
-
-" Highlight past column 80
-set colorcolumn=81,101 " absolute columns to highlight "
-set colorcolumn=+1,+21 " relative (to textwidth) columns to highlight "
-
-
-"set line numbering to be relative to current line
-set number relativenumber
-
-" FBCode using cquery
+" Python Language Server
+au User lsp_setup call lsp#register_server({
+    \ 'name': 'pyls',
+    \ 'cmd': {server_info->['bash', '-c',
+    \   '/data/users/$USER/fbsource/fbcode/experimental/gwicke/vim/fbcode_pyls_wrapper']},
+    \ 'whitelist': ['python'],
+    \ 'workspace_config': {
+    \   'pyls': { 'plugins': { 'pydocstyle': {' enabled': v:true}}}
+    \ },
+ \ })
 " Options from
 " https://phabricator.internmc.facebook.com/diffusion/FBS/browse/master/xplat/nuclide/pkg/nuclide-cquery-lsp-rpc/lib/CqueryInitialization.js
 if executable('cquery')
@@ -389,42 +424,3 @@ if executable('cquery')
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc', 'h'],
       \ })
 endif
-
-" Autocomplete - https://github.com/prabirshrestha/asyncomplete.vim
-let g:lsp_async_completion = 1
-let g:asyncomplete_smart_completion = 1
-let g:asyncomplete_auto_popup = 1
-let g:lsp_signs_enabled = 1         " Show errors in sidebar
-let g:lsp_diagnostics_echo_cursor = 1 " Enable echo under cursor when in normal mode
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '‼'}
-imap <c-space> <Plug>(asyncomplete_force_refresh)
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-autocmd CursorMovedI * if pumvisible() == -1|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-
-" Python
-au User lsp_setup call lsp#register_server({
-    \ 'name': 'pyls',
-    \ 'cmd': {server_info->['bash', '-c',
-    \   '/data/users/$USER/fbsource/fbcode/experimental/gwicke/vim/fbcode_pyls_wrapper']},
-    \ 'whitelist': ['python'],
-    \ 'workspace_config': {
-    \   'pyls': { 'plugins': { 'pydocstyle': {' enabled': v:true}}}
-    \ },
- \ })
-
-" Rust Language Server.
-if executable('rls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'rls',
-        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-        \ 'whitelist': ['rust'],
-        \ })
-endif
-
-" Deoplete for autocompletion
-let g:deoplete#enable_at_startup = 1
