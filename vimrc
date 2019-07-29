@@ -1,3 +1,4 @@
+set noautochdir
 " setup vim-plug package manager.
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -5,16 +6,17 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.vim/plugged')
-Plug 'ayu-theme/ayu-vim'
+Plug 'jremmen/vim-ripgrep'
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-scripts/a.vim'
 Plug 'w0rp/ale'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/vim-lsp'
-Plug 'pdavydov108/vim-lsp-cquery'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+"Plug 'pdavydov108/vim-lsp-cquery'
 Plug 'sickill/vim-pasta'
 Plug 'vim-airline/vim-airline'
 Plug 'scrooloose/nerdtree'
@@ -37,6 +39,10 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
 Plug 'tomtom/tlib_vim'
+Plug 'sheerun/vim-polyglot'
+" Themes"
+Plug 'joshdick/onedark.vim'
+Plug 'KeitaNakamura/neodark.vim'
 call plug#end()
 
 "setting in incompatibility mode with vi
@@ -136,9 +142,9 @@ set hidden
 "allow mouse motion
 set mouse=a
 
-"Change Working Directory to that of the current file
-cmap cwd lcd %:p:h
-cmap cd. lcd %:p:h
+"Show current Working Directory.
+"`cmap cwd lcd %:p:h
+"`cmap cd. lcd %:p:h
 
 "Set encodings
 set enc=utf-8
@@ -166,10 +172,13 @@ if (has("termguicolors"))
   set termguicolors
 endif
 set t_Co=16
+set background=dark
 
 "Color scheme for vim
-let ayucolor="dark"
-colorscheme ayu
+colorscheme neodark
+
+let g:neodark#background = '#191919'
+let g:airline_theme='onedark'
 
 "filetype specific settings
 filetype off
@@ -226,8 +235,7 @@ augroup last_edit_pos
 augroup END
 
 " Insert matching \" by default.
-inoremap " ""<esc>i
-inoremap ' ''<esc>i
+"inoremap " ""<esc>i
 
 "CTRL-A in normal mode for select all
 nmap <C-A> <ESC>G$vgg
@@ -310,7 +318,7 @@ let NERDTreeIgnore=['\.o$', '\~$', '\.pyc$', '\.swp']
 "Toggle Nerd tree using F2.
 map <F2> :NERDTreeToggle<CR>
 "NerdTreeMirrorToggle of nerd-tree-tabs is a smarter option
-map <F2> :NERDTreeMirrorToggle<CR>
+"map <F2> :NERDTreeMirrorToggle<CR>
 "Shift-F2 toggles nerdtree in all tabs
 map <S-F2> :NerdTreeTabsToggle<CR>
 "Don't synchronise view(scroll and cursor position)of different nerdtrees
@@ -318,7 +326,7 @@ let g:nerdtree_tabs_synchronize_view=0
 
 "CtrlP configuration
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.m2,*.git  "MacOSX/Linux
-let g:ctrlp_map = '<leader>p'
+let g:ctrlp_map = '<leader>t'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
@@ -344,14 +352,7 @@ nmap <silent> <leader>y :TagbarToggle<CR><C-w><C-w>
 "Command-T settings
 let g:CommandTMaxFiles=200000
 
-" Autocomplete - https://github.com/prabirshrestha/asyncomplete.vim
-let g:lsp_async_completion = 1
-let g:asyncomplete_smart_completion = 1
-let g:asyncomplete_auto_popup = 1
-let g:lsp_signs_enabled = 1         " Show errors in sidebar
-let g:lsp_diagnostics_echo_cursor = 1 " Enable echo under cursor when in normal mode
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '‼'}
+
 imap <c-space> <Plug>(asyncomplete_force_refresh)
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -360,14 +361,6 @@ autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd CursorMovedI * if pumvisible() == -1|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-" Rust Language Server.
-if executable('rls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'rls',
-        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-        \ 'whitelist': ['rust'],
-        \ })
-endif
 " Deoplete for autocompletion
 let g:deoplete#enable_at_startup = 1
 " Enable experimental completer for rust
@@ -378,7 +371,7 @@ let g:racer_experimental_completer = 1
 source /home/engshare/admin/scripts/vim/biggrep.vim
 " Integrate with myc
 set rtp+=/usr/local/share/myc/vim
-nmap <leader>t :MYC<CR>
+"nmap <leader>t :MYC<CR>
 " Python Language Server
 au User lsp_setup call lsp#register_server({
     \ 'name': 'pyls',
@@ -424,3 +417,32 @@ if executable('cquery')
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc', 'h'],
       \ })
 endif
+
+" Rust Language Server.
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'nightly', 'rls']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Cargo.toml'))},
+        \ 'whitelist': ['rust'],
+        \ })
+endif
+"let g:rustfmt_command = '/bin/rustfmt'
+" Run rustfmt automatically on save.
+let g:rustfmt_autosave = 1
+" Autocomplete - https://github.com/prabirshrestha/asyncomplete.vim
+let g:lsp_async_completion = 1
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+" lsp signs
+let g:lsp_signs_enabled = 1         " Show errors in sidebar
+let g:ale_sign_column_always = 1    " Always keep sign column visible to avoid jittery experience
+let g:lsp_diagnostics_echo_cursor = 0 " Disable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'}
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': ['go'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ }))
