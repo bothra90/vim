@@ -9,6 +9,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'jremmen/vim-ripgrep'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'vim-scripts/a.vim'
 Plug 'w0rp/ale'
 Plug 'prabirshrestha/async.vim'
@@ -283,7 +285,7 @@ filetype plugin indent on    " required
 
 " Highlight past column 80, 100
 set colorcolumn=81,101 " absolute columns to highlight "
-set colorcolumn=+1,+21 " relative (to textwidth) columns to highlight "
+" set colorcolumn=+1,+21 " relative (to textwidth) columns to highlight "
 
 "set line numbering to be relative to current line. This goes well with
 "vim-numbertoggle plugin
@@ -326,14 +328,15 @@ let g:nerdtree_tabs_synchronize_view=0
 
 "CtrlP configuration
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.m2,*.git  "MacOSX/Linux
-let g:ctrlp_map = '<leader>t'
+"let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
+nnoremap <silent> <leader>p :CtrlP<CR>
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ }
-"let g:ctrlp_user_command = 'find %s -type f'        "MacOSX/Linux
+let g:ctrlp_user_command = 'find %s -type f'        "MacOSX/Linux
 
 "Rainbow parantheses (highilighting nested brackets)
 au VimEnter * RainbowParenthesesToggleAll
@@ -365,10 +368,12 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 let g:deoplete#enable_at_startup = 1
 " Enable experimental completer for rust
 let g:racer_experimental_completer = 1
+" Merge imports in rust files.
+let g:rustfmt_options = '--config merge_imports=true'
 
 " FB Specific Configuration.
 "Integrate with tbgs
-source /home/engshare/admin/scripts/vim/biggrep.vim
+" source /home/engshare/admin/scripts/vim/biggrep.vim
 " Integrate with myc
 set rtp+=/usr/local/share/myc/vim
 "nmap <leader>t :MYC<CR>
@@ -446,3 +451,13 @@ call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options
     \ 'blacklist': ['go'],
     \ 'completor': function('asyncomplete#sources#buffer#completor'),
     \ }))
+
+" Customize fzf
+" Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+nnoremap <silent> <leader>t :FZF<CR>
